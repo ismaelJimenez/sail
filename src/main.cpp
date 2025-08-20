@@ -1,11 +1,14 @@
 #include <cstdlib>
 #include <exception>
 #include <fmt/format.h>
+#include <fmt/base.h>
 #include <optional>
 #include <string>
+#include <string_view>
 #include <vector>
 #include <fstream>
 #include <filesystem>
+#include <utility>
 #include <spdlog/spdlog.h>
 
 #include <CLI/CLI.hpp>
@@ -16,9 +19,9 @@
 #include <internal_use_only/config.hpp>
 
 #ifdef _WIN32
-    constexpr std::string_view EXECUTABLE_EXTENSION = ".exe";
+    constexpr std::string_view EXECUTABLE_EXTENSION{".exe"};
 #else
-    constexpr std::string_view EXECUTABLE_EXTENSION = "";
+    constexpr std::string_view EXECUTABLE_EXTENSION{};
 #endif
 
 // Helper function to get executable path with correct extension
@@ -150,7 +153,7 @@ set_target_properties({} PROPERTIES OUTPUT_NAME "{}")
       quote_path(build_dir.string())
     );
     
-    const int configure_result = std::system(cmake_configure_cmd.c_str());
+    const int configure_result = std::system(cmake_configure_cmd.c_str());  // NOLINT(cert-env33-c,concurrency-mt-unsafe)
     if (configure_result != 0) {
       fmt::print("Error: CMake configuration failed\\n");
       return {EXIT_FAILURE, {}};
@@ -163,7 +166,7 @@ set_target_properties({} PROPERTIES OUTPUT_NAME "{}")
       build_mode
     );
     
-    const int build_result = std::system(cmake_build_cmd.c_str());
+    const int build_result = std::system(cmake_build_cmd.c_str());  // NOLINT(cert-env33-c,concurrency-mt-unsafe)
     if (build_result != 0) {
       fmt::print("Error: Build failed\\n");
       return {EXIT_FAILURE, {}};
@@ -204,7 +207,7 @@ int handle_run_command(bool run_release, const std::vector<std::string>& run_arg
   }
   
   // Execute the program
-  const int run_result = std::system(run_command.c_str());
+  const int run_result = std::system(run_command.c_str());  // NOLINT(cert-env33-c,concurrency-mt-unsafe)
   return run_result;
 }
 
