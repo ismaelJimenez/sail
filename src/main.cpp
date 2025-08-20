@@ -46,6 +46,7 @@ std::string quote_path(const std::string& path) {
 }
 
 // Helper function to build project (used by both build and run commands)
+// cppcheck-suppress normalCheckLevelMaxBranches
 std::pair<int, std::filesystem::path> build_project(bool release_mode) {
   // Find project root by looking for Sail.toml
   std::filesystem::path project_root;
